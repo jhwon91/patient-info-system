@@ -1,0 +1,20 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: heuron-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_USER=bucket_user
+      - MYSQL_PASSWORD=1234
+      - MYSQL_DATABASE=heuron
+
+    volumes:
+      - ./data/mysql/:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+
+networks:
+  default:
+    driver: bridge
