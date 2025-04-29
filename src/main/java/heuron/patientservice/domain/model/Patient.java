@@ -35,6 +35,7 @@ public class Patient {
 
     private String imagePath;
     private String imageName;
+    private String imageOriginName;
 
     @Column(nullable = false)
     private Boolean imageUploaded = false;
@@ -48,7 +49,7 @@ public class Patient {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Patient(String name, Integer age, Gender gender, boolean disease) {
+    public Patient(String name, Integer age, Gender gender, boolean disease, String imageOrginName) {
         this.name = name;
         this.age = age;
         this.gender = gender;
