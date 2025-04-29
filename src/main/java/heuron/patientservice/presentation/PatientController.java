@@ -20,17 +20,12 @@ public class PatientController {
     public ApiResponse<PatientResponseDto.createPatient> createPatient(
             @RequestBody PatientRequestDto.createPatient request
     ){
-        PatientResponseDto.createPatient response = PatientResponseDto.createPatient.builder()
-                .patientId(1L)
-                .name("testName")
-                .age(10)
-                .gender(Gender.MALE)
-                .disease(true)
-                .build();
-        return new ApiResponse<>(200, "환자 기본 정보가 저장되었습니다.", response);
+        PatientResponseDto.createPatient createPatientResponse = PatientResponseDto.createPatient.from(patientService.createPatient(request.toCommand()));
+        ApiResponse<PatientResponseDto.createPatient> response = new ApiResponse<>(200, "환자 기본 정보가 저장되었습니다.", createPatientResponse);
+        return response;
     }
 
-    // 환자 이미지 업로드
+    // TODO:환자 이미지 업로드
     @PostMapping("/{patientId}/image")
     public ApiResponse<String> uploadPatientImage(
             @PathVariable Long patientId,
@@ -43,18 +38,12 @@ public class PatientController {
     // 환자 기본 정보 조회
     @GetMapping("/{patientId}")
     public ApiResponse<PatientResponseDto.getPatient> getPatient(@PathVariable Long patientId) {
-        PatientResponseDto.getPatient response = PatientResponseDto.getPatient.builder()
-                .patientId(1L)
-                .name("testName")
-                .age(10)
-                .gender(Gender.MALE)
-                .disease(true)
-                .imageUrl("...")
-                .build();
-        return new ApiResponse<>(200, "환자 기본 정보가 조회되었습니다.", response);
+        PatientResponseDto.getPatient getPatientResponse = PatientResponseDto.getPatient.from(patientService.getPatient(patientId));
+        ApiResponse<PatientResponseDto.getPatient> response = new ApiResponse<>(200, "환자 기본 정보가 조회되었습니다.", getPatientResponse);
+        return response;
     }
 
-    // 환자 이미지 조회
+    // TODO:환자 이미지 조회
     @GetMapping("/{patientId}/images/{fileName}")
     public ApiResponse<String> getPatientImage(
             @PathVariable Long patientId,
@@ -65,8 +54,10 @@ public class PatientController {
 
     // 5. 환자 데이터 삭제
     @DeleteMapping("/{patientId}")
-    public ApiResponse<Void> deletePatient(@PathVariable Long patientId) {
-        return new ApiResponse<>(200, "환자 데이터가 삭제되었습니다.", null);
+    public ApiResponse<PatientResponseDto.deletePatient> deletePatient(@PathVariable Long patientId) {
+        PatientResponseDto.deletePatient deletePatientResponse = PatientResponseDto.deletePatient.from(patientService.deletePatient(patientId));
+        ApiResponse<PatientResponseDto.deletePatient> response = new ApiResponse<>(200, "환자 데이터가 삭제되었습니다.", deletePatientResponse);
+        return response;
     }
 
 }
