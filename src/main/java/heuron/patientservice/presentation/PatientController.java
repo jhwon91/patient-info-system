@@ -59,5 +59,4 @@ public class PatientController {
         ApiResponse<PatientResponseDto.deletePatient> response = new ApiResponse<>(200, "환자 데이터가 삭제되었습니다.", deletePatientResponse);
         return response;
     }
-
 }
