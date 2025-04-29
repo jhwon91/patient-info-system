@@ -4,8 +4,8 @@ import heuron.patientservice.application.dto.PatientCommand;
 import heuron.patientservice.application.dto.PatientResult;
 import heuron.patientservice.domain.model.Patient;
 import heuron.patientservice.domain.repository.PatientRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,11 +17,22 @@ import java.nio.file.Paths;
 import java.util.UUID;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class PatientService {
     private final PatientRepository patientRepository;
     private static final String UPLOAD_DIR = "images/";
+
+    @PostConstruct
+    public void init() {
+        Path uploadPath = Paths.get(UPLOAD_DIR);
+        if (!Files.exists(uploadPath)) {
+            try {
+                Files.createDirectories(uploadPath);
+            } catch (IOException e) {
+                throw new RuntimeException("업로드 디렉토리 생성 실패", e);
+            }
+        }
+    }
 
     @Transactional
     public PatientResult.patientDto createPatient(PatientCommand.createPatient command){
@@ -50,7 +61,6 @@ public class PatientService {
         }
 
         String fileName = UUID.randomUUID() + fileExtension;
-//        String fileName = "1" + fileExtension;
         Path filePath = Paths.get(UPLOAD_DIR, fileName);
         file.transferTo(filePath);
 
