@@ -17,8 +17,14 @@
 **Response**
 ```json
 {
-    "patientId": 1,
-    "message": "환자 기본 정보가 저장되었습니다."
+  "code": "200",
+  "message:": "환자 기본 정보가 저장되었습니다.",
+  "data":{
+    "name": "홍길동",
+    "age": 30,
+    "gender": "MALE",
+    "disease": true
+  }
 }
 ```
 
@@ -48,11 +54,15 @@
 **Response**
 ```json
 {
+  "code": "200",
+  "message:": "환자 기본 정보가 저장되었습니다.",
+  "data":{
     "name": "홍길동",
     "age": 30,
     "gender": "MALE",
     "disease": true,
     "imageUrl": "/images/patient.jpg"
+  }
 }
 ```
 
@@ -71,6 +81,14 @@
 **Response**
 ```json
 {
-  "message": "환자 데이터가 삭제되었습니다."
+  "code": "200",
+  "message:": "환자 기본 정보가 저장되었습니다.",
+  "data":{
+    "name": "홍길동",
+    "age": 30,
+    "gender": "MALE",
+    "disease": true,
+    "imageUrl": "/images/patient.jpg"
+  }
 }
 ```
