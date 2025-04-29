@@ -42,7 +42,7 @@
 {
   "code": 200,
   "message": "이미지 업로드가 완료되었습니다.",
-  "data": "/images/e3d86776-e30f-4bc3-9b8d-8ddc6665345b.jpeg"
+  "data": "images/4d207a34-028f-4c06-ab6d-eab98ac12e4d.jpeg"
 }
 ```
 
@@ -57,12 +57,15 @@
 {
   "code": "200",
   "message:": "환자 기본 정보가 저장되었습니다.",
-  "data":{
-    "name": "홍길동",
-    "age": 30,
+  "data": {
+    "patientId": 1,
+    "name": "test",
+    "age": 10,
     "gender": "MALE",
     "disease": true,
-    "imageUrl": "/images/patient.jpg"
+    "imagePath": "images/4d207a34-028f-4c06-ab6d-eab98ac12e4d.jpeg",
+    "imageName": "4d207a34-028f-4c06-ab6d-eab98ac12e4d.jpeg",
+    "imageUploaded": true
   }
 }
 ```
@@ -70,9 +73,18 @@
 ---
 
 ### 4. 환자 이미지 조회
-- URL : api/patients/{patientId}/images
+- URL : api/patients/{patientId}/images/{fileName}
 - Method : GET
 
+
+**Response**
+```json
+{
+  "code": 200,
+  "message": "환자 이미지가 조회되었습니다.",
+  "data": "http://localhost:8080/images/4d207a34-028f-4c06-ab6d-eab98ac12e4d.jpeg"
+}
+```
 ---
 
 ### 5. 환자 데이터 삭제
@@ -85,11 +97,11 @@
   "code": "200",
   "message:": "환자 기본 정보가 저장되었습니다.",
   "data":{
+    "patientId": 1,
     "name": "홍길동",
     "age": 30,
     "gender": "MALE",
-    "disease": true,
-    "imageUrl": "/images/patient.jpg"
+    "disease": true
   }
 }
 ```

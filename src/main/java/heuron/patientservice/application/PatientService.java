@@ -100,7 +100,15 @@ public class PatientService {
         Patient patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new IllegalArgumentException("환자를 찾을 수 없습니다."));
 
-        //TODO: 이미지 삭제
+        if (patient.getImageUploaded()) {
+            Path filePath = Paths.get(patient.getImagePath());
+            try {
+                Files.deleteIfExists(filePath);
+            } catch (IOException e) {
+                throw new IllegalArgumentException("이미지 파일 삭제 실패");
+            }
+        }
+
 
         patientRepository.delete(patient);
 

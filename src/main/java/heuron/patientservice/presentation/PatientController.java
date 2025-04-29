@@ -47,7 +47,6 @@ public class PatientController {
         return response;
     }
 
-    // TODO:환자 이미지 조회
     @GetMapping("/{patientId}/images/{fileName}")
     public ApiResponse<String> getPatientImage(
             @PathVariable Long patientId,
