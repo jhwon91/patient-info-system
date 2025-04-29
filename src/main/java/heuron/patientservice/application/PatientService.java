@@ -51,7 +51,7 @@ public class PatientService {
     @Transactional(readOnly = true)
     public String getPatientImage(Long patientId, String fileName){
         Patient patient = patientRepository.findByIdAndImageUploadedTrue(patientId)
-                .orElseThrow(() -> new IllegalArgumentException("이미지 업로드가 완료된 환자만 조회 가능합니다."));
+                .orElseThrow(() -> new IllegalArgumentException("이미지가 업로드가 완료된 환자만 조회 가능합니다."));
 
         return imageManager.getImage(fileName, patient.getImagePath());
     }

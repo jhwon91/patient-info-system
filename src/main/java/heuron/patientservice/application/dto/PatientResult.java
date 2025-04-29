@@ -16,6 +16,7 @@ public class PatientResult {
             Boolean disease,
             String imagePath,
             String imageName,
+            String imageOriginName,
             Boolean imageUploaded,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
@@ -30,6 +31,7 @@ public class PatientResult {
                     .disease(patient.getDisease())
                     .imagePath(patient.getImagePath())
                     .imageName(patient.getImageName())
+                    .imageOriginName(patient.getImageOriginName())
                     .imageUploaded(patient.getImageUploaded())
                     .build();
         }
