@@ -4,35 +4,17 @@ import heuron.patientservice.application.dto.PatientCommand;
 import heuron.patientservice.application.dto.PatientResult;
 import heuron.patientservice.domain.model.Patient;
 import heuron.patientservice.domain.repository.PatientRepository;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class PatientService {
     private final PatientRepository patientRepository;
-    private static final String UPLOAD_DIR = "images/";
+    private final ImageManager imageManager;
 
-    @PostConstruct
-    public void init() {
-        Path uploadPath = Paths.get(UPLOAD_DIR);
-        if (!Files.exists(uploadPath)) {
-            try {
-                Files.createDirectories(uploadPath);
-            } catch (IOException e) {
-                throw new RuntimeException("업로드 디렉토리 생성 실패", e);
-            }
-        }
-    }
 
     @Transactional
     public PatientResult.patientDto createPatient(PatientCommand.createPatient command){
@@ -45,26 +27,15 @@ public class PatientService {
     }
 
     @Transactional
-    public String uploadPatientImage(Long patientId, MultipartFile file) throws IOException {
-        if (!file.getContentType().equals("image/png") && !file.getContentType().equals("image/jpeg")) {
-            throw new IllegalArgumentException("PNG 또는 JPG 파일만 업로드 가능합니다.");
-        }
-
+    public String uploadPatientImage(Long patientId, MultipartFile file) {
         Patient patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new IllegalArgumentException("환자를 찾을 수 없습니다."));
 
+        String filePath = imageManager.uploadImage(file);
         String fileOriginName = file.getOriginalFilename();
+        String fileName = imageManager.fileNameByFilePath(filePath);
 
-        String fileExtension = "";
-        if (fileOriginName.contains(".")) {
-            fileExtension = fileOriginName.substring(fileOriginName.lastIndexOf("."));
-        }
-
-        String fileName = UUID.randomUUID() + fileExtension;
-        Path filePath = Paths.get(UPLOAD_DIR, fileName);
-        file.transferTo(filePath);
-
-        patient.saveImage(filePath.toString(), fileName, fileOriginName);
+        patient.saveImage(filePath, fileName, fileOriginName);
         patientRepository.save(patient);
         return filePath.toString();
     }
@@ -82,17 +53,7 @@ public class PatientService {
         Patient patient = patientRepository.findByIdAndImageUploadedTrue(patientId)
                 .orElseThrow(() -> new IllegalArgumentException("이미지 업로드가 완료된 환자만 조회 가능합니다."));
 
-        String storedFileName = patient.getImagePath().substring(patient.getImagePath().lastIndexOf("/") + 1);
-        if (!storedFileName.equals(fileName)) {
-            throw new IllegalArgumentException("잘못된 이미지 파일 이름입니다.");
-        }
-
-        Path filePath = Paths.get(UPLOAD_DIR, fileName);
-        if (!Files.exists(filePath)) {
-            throw new IllegalArgumentException("이미지 파일을 찾을 수 없습니다.");
-        }
-
-        return "/images/" + fileName;
+        return imageManager.getImage(fileName, patient.getImagePath());
     }
 
     @Transactional
@@ -101,12 +62,7 @@ public class PatientService {
                 .orElseThrow(() -> new IllegalArgumentException("환자를 찾을 수 없습니다."));
 
         if (patient.getImageUploaded()) {
-            Path filePath = Paths.get(patient.getImagePath());
-            try {
-                Files.deleteIfExists(filePath);
-            } catch (IOException e) {
-                throw new IllegalArgumentException("이미지 파일 삭제 실패");
-            }
+            imageManager.deleteImage(patient.getImagePath());
         }
 
 
