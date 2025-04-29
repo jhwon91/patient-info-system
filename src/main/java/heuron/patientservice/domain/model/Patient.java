@@ -65,4 +65,12 @@ public class Patient {
                 .build();
     }
 
+    public void saveImage(String imagePath, String imageName, String imageOriginName){
+        this.imagePath = imagePath;
+        this.imageName = imageName;
+        this.imageOriginName = imageOriginName;
+        this.imageUploaded = true;
+    }
+
+
 }

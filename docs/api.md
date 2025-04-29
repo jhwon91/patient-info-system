@@ -40,8 +40,9 @@
 **Response**
 ```json
 {
-    "imageUrl": "/images/patient.jpg",
-    "message": "이미지 업로드가 완료되었습니다."
+  "code": 200,
+  "message": "이미지 업로드가 완료되었습니다.",
+  "data": "/images/e3d86776-e30f-4bc3-9b8d-8ddc6665345b.jpeg"
 }
 ```
 
@@ -69,7 +70,7 @@
 ---
 
 ### 4. 환자 이미지 조회
-- URL : api/patients/{patientId}/images/{fileName}
+- URL : api/patients/{patientId}/images
 - Method : GET
 
 ---

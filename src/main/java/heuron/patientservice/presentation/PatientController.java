@@ -1,13 +1,18 @@
 package heuron.patientservice.presentation;
 
 import heuron.patientservice.application.PatientService;
-import heuron.patientservice.domain.Gender;
 import heuron.patientservice.global.ApiResponse;
 import heuron.patientservice.presentation.dto.PatientRequestDto;
 import heuron.patientservice.presentation.dto.PatientResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
 
 @RestController
 @RequestMapping("/api/patients")
@@ -25,13 +30,12 @@ public class PatientController {
         return response;
     }
 
-    // TODO:환자 이미지 업로드
     @PostMapping("/{patientId}/image")
     public ApiResponse<String> uploadPatientImage(
             @PathVariable Long patientId,
-            @RequestParam("file") MultipartFile file
-    ){
-        String imageUrl = "...";
+            @RequestParam MultipartFile file
+    ) throws IOException {
+        String imageUrl = patientService.uploadPatientImage(patientId, file);
         return new ApiResponse<>(200, "이미지 업로드가 완료되었습니다.", imageUrl);
     }
 
@@ -47,9 +51,10 @@ public class PatientController {
     @GetMapping("/{patientId}/images/{fileName}")
     public ApiResponse<String> getPatientImage(
             @PathVariable Long patientId,
-            @PathVariable String fileName) {
-        String imageUrl = "...";
-        return new ApiResponse<>(200, "환자 이미지가 조회되었습니다.", imageUrl);
+            @PathVariable String fileName
+    )  {
+        String imageUrl = patientService.getPatientImage(patientId, fileName);
+        return new ApiResponse<>(200, "환자 이미지가 조회되었습니다.", "http://localhost:8080"+imageUrl);
     }
 
     // 5. 환자 데이터 삭제
